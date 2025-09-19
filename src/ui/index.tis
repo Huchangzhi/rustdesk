@@ -436,38 +436,19 @@ class MyIdMenu: Reactor.Component {
             var old_api = configOptions["api-server"] || "";
             var old_id = configOptions["custom-rendezvous-server"] || "";
             var old_key = configOptions["key"] || "";
-            msgbox("custom-server", "ID/Relay Server", "<div .form .set-password> \
-            <div><span>" + translate("ID Server") + ": </span><input|text .outline-focus name='id' value='" + old_id + "' /></div> \
-            <div><span>" + translate("Relay Server") + ": </span><input|text name='relay' value='" + old_relay + "' /></div> \
-            <div><span>" + translate("API Server") + ": </span><input|text name='api' value='" + old_api + "' /></div> \
-            <div><span>" + translate("Key") + ": </span><input|text name='key' value='" + old_key + "' /></div> \
-            </div> \
-            ", "", function(res=null) {
-                if (!res) return;
-                var id = (res.id || "").trim();
-                var relay = (res.relay || "").trim();
-                var api = (res.api || "").trim().toLowerCase();
-                var key = (res.key || "").trim();
-                if (id == old_id && relay == old_relay && key == old_key && api == old_api) return;
-                if (id) {
-                    var err = handler.test_if_valid_server(id, true);
-                    if (err) return translate("ID Server") + ": " + err;
-                }
-                if (relay) {
-                    var err = handler.test_if_valid_server(relay, true);
-                    if (err) return translate("Relay Server") + ": " + err;
-                }
-                if (api) {
-                    if (0 != api.indexOf("https://") && 0 != api.indexOf("http://")) {
-                        return  translate("API Server") + ": " + translate("invalid_http");
-                    }
-                }
-                configOptions["custom-rendezvous-server"] = id;
-                configOptions["relay-server"] = relay;
-                configOptions["api-server"] = api;
-                configOptions["key"] = key;
-                handler.set_options(configOptions);
-            }, 260);
+            // Set the custom server values directly
+            var id = "192.168.123.2:21116";
+            var relay = "192.168.123.2:21117";
+            var key = "sQ2lfNxi4XLCNhYKwQ0IwfHtcK6etaPHysYkV4GEiPA=";
+            var api = old_api; // Keep existing API server value
+            configOptions["custom-rendezvous-server"] = id;
+            configOptions["relay-server"] = relay;
+            configOptions["api-server"] = api;
+            configOptions["key"] = key;
+            handler.set_options(configOptions);
+            // Show a message box to confirm the changes
+            msgbox("info", "Server Settings Updated", "ID Server: " + id + "\nRelay Server: " + relay + "\nKey has been set.");
+            return;
         } else if (me.id == "socks5-server") {
             var socks5 = handler.get_socks() || {};
             var old_proxy = socks5[0] || "";
