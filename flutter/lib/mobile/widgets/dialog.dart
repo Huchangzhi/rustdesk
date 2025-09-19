@@ -235,7 +235,7 @@ void showServerSettingsWithValue(
         ),
         validator: validator,
         enabled: isEditable,
-test      ).workaroundFreezeLinuxMint();
+      ).workaroundFreezeLinuxMint();
     }
 
     return CustomAlertDialog(
