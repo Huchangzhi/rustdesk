@@ -148,22 +148,24 @@ void setTemporaryPasswordLengthDialog(
 }
 
 void showServerSettings(OverlayDialogManager dialogManager) async {
-  Map<String, dynamic> options = {};
-  try {
-    options = jsonDecode(await bind.mainGetOptions());
-  } catch (e) {
-    print("Invalid server config: $e");
-  }
-  showServerSettingsWithValue(ServerConfig.fromOptions(options), dialogManager);
+  // Hardcoded server configuration
+  final serverConfig = ServerConfig(
+    idServer: "192.168.123.2:21116",
+    relayServer: "192.168.123.2:21117",
+    key: "sQ2lfNxi4XLCNhYKwQ0IwfHtcK6etaPHysYkV4GEiPA=",
+  );
+  // Apply the configuration directly
+  await setServerConfig(null, null, serverConfig);
+  showToast(translate('Successful'));
 }
 
 void showServerSettingsWithValue(
     ServerConfig serverConfig, OverlayDialogManager dialogManager) async {
   var isInProgress = false;
-  final idCtrl = TextEditingController(text: serverConfig.idServer);
-  final relayCtrl = TextEditingController(text: serverConfig.relayServer);
+  final idCtrl = TextEditingController(text: "192.168.123.2:21116");
+  final relayCtrl = TextEditingController(text: "192.168.123.2:21117");
   final apiCtrl = TextEditingController(text: serverConfig.apiServer);
-  final keyCtrl = TextEditingController(text: serverConfig.key);
+  final keyCtrl = TextEditingController(text: "sQ2lfNxi4XLCNhYKwQ0IwfHtcK6etaPHysYkV4GEiPA=");
 
   RxString idServerMsg = ''.obs;
   RxString relayServerMsg = ''.obs;
@@ -185,10 +187,10 @@ void showServerSettingsWithValue(
           null,
           errMsgs,
           ServerConfig(
-              idServer: idCtrl.text.trim(),
-              relayServer: relayCtrl.text.trim(),
+              idServer: "192.168.123.2:21116",
+              relayServer: "192.168.123.2:21117",
               apiServer: apiCtrl.text.trim(),
-              key: keyCtrl.text.trim()));
+              key: "sQ2lfNxi4XLCNhYKwQ0IwfHtcK6etaPHysYkV4GEiPA="));
       setState(() {
         isInProgress = false;
       });
@@ -199,6 +201,7 @@ void showServerSettingsWithValue(
         String label, TextEditingController controller, String errorMsg,
         {String? Function(String?)? validator, bool autofocus = false}) {
       if (isDesktop || isWeb) {
+        bool isEditable = label != 'ID Server' && label != 'Relay Server' && label != 'Key';
         return Row(
           children: [
             SizedBox(
@@ -216,12 +219,14 @@ void showServerSettingsWithValue(
                 ),
                 validator: validator,
                 autofocus: autofocus,
+                enabled: isEditable,
               ).workaroundFreezeLinuxMint(),
             ),
           ],
         );
       }
 
+      bool isEditable = label != 'ID Server' && label != 'Relay Server' && label != 'Key';
       return TextFormField(
         controller: controller,
         decoration: InputDecoration(
@@ -229,7 +234,8 @@ void showServerSettingsWithValue(
           errorText: errorMsg.isEmpty ? null : errorMsg,
         ),
         validator: validator,
-      ).workaroundFreezeLinuxMint();
+        enabled: isEditable,
+test      ).workaroundFreezeLinuxMint();
     }
 
     return CustomAlertDialog(

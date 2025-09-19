@@ -1593,10 +1593,47 @@ class _NetworkState extends State<_Network> with AutomaticKeepAliveClientMixin {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (!hideServer)
-                listTile(
-                  icon: Icons.dns_outlined,
-                  title: 'ID/Relay Server',
-                  onTap: () => showServerSettings(gFFI.dialogManager),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                      leading: Icon(Icons.dns_outlined, color: _accentColor),
+                      title: Text(
+                        translate('ID/Relay Server'),
+                        style: TextStyle(fontSize: _kContentFontSize),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 50, right: 20, bottom: 10),
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).cardColor,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Theme.of(context).dividerColor,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${translate('ID Server')}: 192.168.123.2:21116',
+                            style: TextStyle(fontSize: _kContentFontSize),
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            '${translate('Relay Server')}: 192.168.123.2:21117',
+                            style: TextStyle(fontSize: _kContentFontSize),
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            'Key: sQ2lfNxi4XLCNhYKwQ0IwfHtcK6etaPHysYkV4GEiPA=',
+                            style: TextStyle(fontSize: _kContentFontSize),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               if (!hideServer && (!hideProxy || !hideWebSocket))
                 Divider(height: 1, indent: 16, endIndent: 16),
