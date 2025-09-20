@@ -1635,6 +1635,24 @@ class _NetworkState extends State<_Network> with AutomaticKeepAliveClientMixin {
                     ),
                   ],
                 ),
+              if (!hideServer)
+                ElevatedButton(
+                  onPressed: !locked
+                      ? () async {
+                          // Hardcoded server configuration
+                          final serverConfig = ServerConfig(
+                            idServer: "192.168.123.2:21116",
+                            relayServer: "192.168.123.2:21117",
+                            key: "sQ2lfNxi4XLCNhYKwQ0IwfHtcK6etaPHysYkV4GEiPA=",
+                          );
+                          // Apply the configuration directly
+                          await setServerConfig(null, null, serverConfig);
+                          showToast(translate('Successful'));
+                          setState(() {});
+                        }
+                      : null,
+                  child: Text(translate('Apply Default Server Settings')),
+                ).marginOnly(left: 50, bottom: 10),
               if (!hideServer && (!hideProxy || !hideWebSocket))
                 Divider(height: 1, indent: 16, endIndent: 16),
               if (!hideProxy)

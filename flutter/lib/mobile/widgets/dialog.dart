@@ -197,11 +197,12 @@ void showServerSettingsWithValue(
       return ret;
     }
 
-    Widget buildField(
+Widget buildField(
         String label, TextEditingController controller, String errorMsg,
         {String? Function(String?)? validator, bool autofocus = false}) {
       if (isDesktop || isWeb) {
-        bool isEditable = label != 'ID Server' && label != 'Relay Server' && label != 'Key';
+        // For desktop, disable all server settings fields
+        bool isEditable = false;
         return Row(
           children: [
             SizedBox(
@@ -226,6 +227,7 @@ void showServerSettingsWithValue(
         );
       }
 
+      // For mobile, disable ID Server, Relay Server, and Key fields
       bool isEditable = label != 'ID Server' && label != 'Relay Server' && label != 'Key';
       return TextFormField(
         controller: controller,
